@@ -49,9 +49,21 @@ resource "aws_elb" "web" {
 resource "aws_route53_record" "web" {
   zone_id = "${data.aws_route53_zone.environment.zone_id}"
   name    = "${var.environment}.${var.domain}"
-  type    = "A"
+  type    = "CNAME"
   ttl     = "60"
   records = ["${aws_elb.web.dns_name}"]
+}
+
+resource "aws_route53_record" "web" {
+  zone_id = "${data.aws_route53_zone.environment.zone_id}"
+  name    = "${var.environment}-alias.${var.domain}"
+  type    = "A"
+
+  alias {
+    name                   = "${aws_elb.web.dns_name}"
+    zone_id                = "${aws_elb.web.zone_id}"
+    evaluate_target_health = true
+  }
 }
 
 resource "aws_instance" "app" {
