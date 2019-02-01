@@ -12,12 +12,12 @@ variable "key_name" {
 
 variable "public_subnet_ids" {
   default    = []
-  desription = "The list of public subnets to populate"
+  description = "The list of public subnets to populate"
 }
 
 variable "private_subnet_ids" {
   default    = []
-  desription = "The list of private subnets to populate"
+  description = "The list of private subnets to populate"
 }
 
 variable "ami" {
