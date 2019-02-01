@@ -1,4 +1,4 @@
-output "web_alb_addres" {
+output "web_elb_address" {
   value = "${aws_elb.web.dns_name}"
 }
 
