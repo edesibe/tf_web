@@ -22,7 +22,7 @@ variable "private_subnet_ids" {
 
 variable "ami" {
   default = {
-    "eu-central-1" = "ami-0bdf93799014acdc4"
+    "eu-central-1" = "ami-0cfbf4f6db41068ac"
   }
 
   description = "The AMIs to use for web and api instances"
