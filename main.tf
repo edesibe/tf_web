@@ -54,7 +54,7 @@ resource "aws_route53_record" "web" {
   records = ["${aws_elb.web.dns_name}"]
 }
 
-resource "aws_route53_record" "web" {
+resource "aws_route53_record" "web_alias" {
   zone_id = "${data.aws_route53_zone.environment.zone_id}"
   name    = "${var.environment}-alias.${var.domain}"
   type    = "A"
