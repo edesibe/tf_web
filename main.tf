@@ -43,6 +43,14 @@ resource "aws_elb" "web" {
     lb_protocol       = "http"
   }
 
+  health_check {
+    healthy_threshold   = 3
+    unhealthy_threshold = 2
+    timeout             = 5
+    target              = "TCP:80"
+    interval            = 30
+  }
+
   instances = ["${aws_instance.web.*.id}"]
 }
 
