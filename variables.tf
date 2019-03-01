@@ -21,8 +21,10 @@ variable "private_subnet_ids" {
 }
 
 variable "ami" {
+  description = "The AMIs (amazon linux) to use for WEB instances"
   default = {
     "eu-central-1" = "ami-0cfbf4f6db41068ac"
+    "us-east-1" = "ami-0080e4c5bc078760e"
   }
 
   description = "The AMIs to use for web and api instances"

@@ -1,6 +1,6 @@
 # AWS Web service module for Terraform
 
-A lightweight Web service module for The Terraform Book.
+A lightweight Web service module.
 
 ## Usage
 
