@@ -17,7 +17,7 @@ resource "aws_instance" "web" {
   ami           = "${lookup(var.ami, var.region)}"
   instance_type = "${var.instance_type}"
   key_name      = "${var.key_name}"
-  subnet_id     = "${var.public_subnet_ids[0]}"
+  subnet_id     = "${element(var.public_subnet_ids, count.index)}"
   user_data     = "${file("${path.module}/files/web_bootstrap.sh")}"
 
   vpc_security_group_ids = [
@@ -26,6 +26,7 @@ resource "aws_instance" "web" {
 
   tags {
     Name = "${var.environment}-web-${count.index}"
+    ENV = "${var.environment}"
   }
 
   count = "${var.web_instance_count}"
@@ -33,7 +34,7 @@ resource "aws_instance" "web" {
 
 resource "aws_elb" "web" {
   name            = "${var.environment}-web-elb"
-  subnets         = ["${var.public_subnet_ids[0]}"]
+  subnets         = ["${var.public_subnet_ids}"]
   security_groups = ["${aws_security_group.web_inbound_sg.id}"]
 
   listener {
@@ -78,7 +79,7 @@ resource "aws_instance" "app" {
   ami           = "${lookup(var.ami, var.region)}"
   instance_type = "${var.instance_type}"
   key_name      = "${var.key_name}"
-  subnet_id     = "${var.private_subnet_ids[0]}"
+  subnet_id     = "${element(var.private_subnet_ids, count.index)}"
   user_data     = "${file("${path.module}/files/app_bootstrap.sh")}"
 
   vpc_security_group_ids = [
@@ -87,6 +88,7 @@ resource "aws_instance" "app" {
 
   tags {
     Name = "${var.environment}-app-${count.index}"
+    ENV = "${var.environment}"
   }
 
   count = "${var.app_instance_count}"
