@@ -15,10 +15,6 @@ variable "web_instance_count" {
   description = "The number of Web instances to create"
 }
 
-variable "app_instance_count" {
-  default = 1
-  description = "The number of App instances to create"
-}
 
 
 module "web" {
@@ -28,7 +24,6 @@ module "web" {
   public_subnet_ids  = "${module.vpc.public_subnet_ids}"
   private_subnet_ids = "${module.vpc.private_subnet_ids}"
   web_instance_counts = ${var.web_instance_counts}"
-  app_instance_counts = ${var.app_instance_counts}"
   domain             = "${var.domain}"
   region             = "${var.region}"
   key_name           = "${var.key_name}"
@@ -42,13 +37,10 @@ output "web_host_addresses" {
   value = ["${module.web.web_host_addresses}"]
 }
 
-output "app_host_addresses" {
-  value = ["${module.web.app_host_addresses}"]
-}
 ```
 
 Assumes you're building your Web service inside a VPC created from [this
-module](https://github.com/turnbullpublishing/tf_vpc).
+module](https://github.com/edesibe/tf_vpc).
 
 See `interface.tf` for additional configurable variables.
 

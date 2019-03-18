@@ -75,24 +75,6 @@ resource "aws_route53_record" "web_alias" {
   }
 }
 
-resource "aws_instance" "app" {
-  ami           = "${lookup(var.ami, var.region)}"
-  instance_type = "${var.instance_type}"
-  key_name      = "${var.key_name}"
-  subnet_id     = "${element(var.private_subnet_ids, count.index)}"
-  user_data     = "${file("${path.module}/files/app_bootstrap.sh")}"
-
-  vpc_security_group_ids = [
-    "${aws_security_group.app_host_sg.id}",
-  ]
-
-  tags {
-    Name = "${var.environment}-app-${count.index}"
-    ENV = "${var.environment}"
-  }
-
-  count = "${var.app_instance_count}"
-}
 
 resource "aws_security_group" "web_inbound_sg" {
   name        = "${var.environment}-web-inbound"
@@ -164,42 +146,3 @@ resource "aws_security_group" "web_host_sg" {
   }
 }
 
-resource "aws_security_group" "app_host_sg" {
-  name        = "${var.environment}-app-host"
-  description = "Allow App traffic to app hosts"
-  vpc_id      = "${data.aws_vpc.environment.id}"
-
-  # App access from the VPC
-  ingress {
-    from_port   = 1234
-    to_port     = 1234
-    protocol    = "tcp"
-    cidr_blocks = ["${data.aws_vpc.environment.cidr_block}"]
-  }
-
-  # SSH access from the VPC
-  ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["${data.aws_vpc.environment.cidr_block}"]
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  ingress {
-    from_port   = 8
-    to_port     = 0
-    protocol    = "icmp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  tags {
-    Name = "${var.environment}-app-host-sg"
-  }
-}
