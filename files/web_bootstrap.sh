@@ -9,7 +9,7 @@ sudo cat >/usr/share/nginx/html/index.html << "EOF"
     <title>Web service</title>
   </head>
   <body>
-    <h1>The Web service</h1>
+    <h1>The Web service on ${private_ip}</h1>
   </body>
 </html>
 EOF

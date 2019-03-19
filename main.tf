@@ -13,12 +13,20 @@ data "aws_route53_zone" "environment" {
   name = "${var.domain}."
 }
 
+data "template_file" "user_data" {
+  template = "${file("${path.module}/files/web_bootstrap.sh")}"
+
+  vars {
+    private_ip = "${aws_instance.web.private_ip}"
+  }
+}
+
 resource "aws_instance" "web" {
   ami           = "${lookup(var.ami, var.region)}"
   instance_type = "${var.instance_type}"
   key_name      = "${var.key_name}"
   subnet_id     = "${element(var.public_subnet_ids, count.index)}"
-  user_data     = "${file("${path.module}/files/web_bootstrap.sh")}"
+  user_data     = "${data.template_file.user_data.rendered}"
 
   vpc_security_group_ids = [
     "${aws_security_group.web_host_sg.id}",
