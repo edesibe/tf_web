@@ -6,10 +6,10 @@ sudo yum install -y nginx
 sudo cat >/usr/share/nginx/html/index.html << "EOF"
 <html>
   <head>
-    <title>Web service</title>
+    <title>Web service on ${hostname}</title>
   </head>
   <body>
-    <h1>The Web service</h1>
+    <h1>The Web service running on ${hostname}</h1>
   </body>
 </html>
 EOF

@@ -8,6 +8,16 @@ data "aws_vpc" "environment" {
   id = "${var.vpc_id}"
 }
 
+data "template_file" "this_file" {
+  template = "${file("${path.module}/files/web_bootstrap.sh")}"
+  count = "${var.web_instance_count}"
+
+  vars {
+    hostname = "web-${format("%03d", count.index + 1)}"
+  }
+}
+
+
 # getting records from date provider aws_route53_zone
 data "aws_route53_zone" "environment" {
   name = "${var.domain}."
@@ -18,7 +28,7 @@ resource "aws_instance" "web" {
   instance_type = "${var.instance_type}"
   key_name      = "${var.key_name}"
   subnet_id     = "${element(var.public_subnet_ids, count.index)}"
-  user_data     = "${file("${path.module}/files/web_bootstrap.sh")}"
+  user_data     = "${element(data.template_file.this_file.*.rendered, count.index)}"
 
   vpc_security_group_ids = [
     "${aws_security_group.web_host_sg.id}",
